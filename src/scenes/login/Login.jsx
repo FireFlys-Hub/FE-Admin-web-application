@@ -50,6 +50,7 @@ const Login = () => {
             if (result) {
                 console.log('Login successful');
                 navigate('/')
+                window.location.href = '/';
             } else {
                 console.log('Login failed', error);
             }
