@@ -69,19 +69,31 @@ const useAuthService = () => {
         } catch (error) {
             console.error('Error refreshing token:', error);
             setError(error);
-            logoutUser(); // Logout if unable to refresh token
+            getLogout(); // Logout if unable to refresh token
         }
     };
 
-    const logoutUser = () => {
-        console.log("Logout");
-        setUser(null);
-        Cookies.remove('authToken');
-        Cookies.remove('refreshToken');
-        setTokenExpires(null);
+    const getLogout = async () => {
+        try {
+            const token = JSON.parse(sessionStorage.getItem('account')).token;
+            const res = await axios.get('http://127.0.0.1:8000/api/logout', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (res.data.status === true) {
+                sessionStorage.removeItem('account');
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            console.error('Error during logout:', err);
+            return false;
+        }
     };
 
-    return { user, error, postLogin, logoutUser, refreshAccessToken };
+    return { user, error, postLogin, getLogout, refreshAccessToken };
 };
 
 export default useAuthService;
