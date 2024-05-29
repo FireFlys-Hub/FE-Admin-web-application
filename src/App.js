@@ -1,33 +1,32 @@
 import { ColorModeContext, useMode } from "./theme";
-import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider, Box } from "@mui/material";
+import { BrowserRouter as Router } from "react-router-dom";
+import { useEffect, useState } from "react";
+import SideBar from "./scenes/global/Sidebar";
 import Topbar from "./scenes/global/Topbar";
-import Sidebar from "./scenes/global/Sidebar";
+import AppRoutes from "./routes/AppRoutes";
 import Dashboard from "./scenes/dashboard";
-import { Route, Routes } from "react-router-dom";
-import User from "./scenes/team";
-
+// Trong App
 function App() {
   const [theme, colorMode] = useMode();
+
   return (
-    <>
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Box display="flex">
-            <Sidebar />
-            <main className="content">
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Box display="flex" flexDirection="row">
+            <SideBar />
+            <Box width="100%">
               <Topbar />
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/user" element={<User />} />
-              </Routes>
-            </main>
+              <AppRoutes />
+            </Box>
           </Box>
-        </ThemeProvider>
-      </ColorModeContext.Provider>
-    </>
+        </Router>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
+
 
 export default App;

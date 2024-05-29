@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
@@ -36,26 +36,27 @@ const Item = ({ title, to, icon }) => {
   );
 };
 
-const Sidebar = () => {
+const SideBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const location = useLocation();
 
   useEffect(() => {
-    const pathname = window.location.pathname;
-    const selectedItem = getItemByPathname(pathname);
+    const selectedItem = getItemByPathname(location.pathname);
     if (selectedItem) {
       setSelected(selectedItem.title);
     }
-  }, []);
+  }, [location.pathname]);
 
   const getItemByPathname = (pathname) => {
     const items = [
       { title: "Dashboard", to: "/" },
       { title: "Manage User", to: "/user" },
+      { title: "Manage Products", to: "/product" },
       { title: "Contacts Information", to: "/contacts" },
-      { title: "Manage Orders", to: "/order" },
+      { title: "Manage Order", to: "/order" },
       { title: "Profile Form", to: "/form" },
       { title: "Wishlist", to: "/wishlist" },
       { title: "Bar Chart", to: "/bar" },
@@ -205,4 +206,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SideBar;

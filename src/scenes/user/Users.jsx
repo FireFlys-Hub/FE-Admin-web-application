@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme,IconButton } from "@mui/material";
+import { Box, Typography, useTheme, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
@@ -17,7 +17,7 @@ const User = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
-               await fetchData();
+                await fetchData();
                 setData(users);
             } catch (error) {
                 console.error('Error fetching data', error);
@@ -60,17 +60,18 @@ const User = () => {
                 </Box>
             ),
         },
-        {headerName:"Action",
-        renderCell: ({ row }) => (
-            <Box display="flex" justifyContent="center">
-                <IconButton color={colors.grey[500]} onClick={() => handleUpdate(row)}>
-                    <EditNoteOutlinedIcon />
-                </IconButton>
-                <IconButton color={colors.redAccent[500]} onClick={() => handleDelete(row)}>
-                    <DeleteOutlinedIcon />
-                </IconButton>
-            </Box>
-        ),
+        {
+            headerName: "Action",
+            renderCell: ({ row }) => (
+                <Box display="flex" justifyContent="center">
+                    <IconButton color={colors.grey[500]} onClick={() => handleUpdate(row)}>
+                        <EditNoteOutlinedIcon />
+                    </IconButton>
+                    <IconButton color={colors.redAccent[500]} onClick={() => handleDelete(row)}>
+                        <DeleteOutlinedIcon />
+                    </IconButton>
+                </Box>
+            ),
         }
     ];
     const handleUpdate = (row) => {
@@ -82,44 +83,31 @@ const User = () => {
         console.log("Delete action clicked for row:", row);
     };
     return (
-<Box m="20px">
-    <Header title="User" subtitle="Managing the Users" />
-    {data && (
-        <Box
-            m="40px 0 0 0"
-            height="75vh"
-            sx={{
-                "& .MuiDataGrid-root": {
-                    border: "none",
-                },
-                "& .MuiDataGrid-cell": {
-                    borderBottom: "none",
-                },
-                "& .name-column--cell": {
-                    color: colors.greenAccent[300],
-                },
-                "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: colors.blueAccent[700],
-                    borderBottom: "none",
-                },
-                "& .MuiDataGrid-virtualScroller": {
-                    backgroundColor: colors.primary[400],
-                },
-                "& .MuiDataGrid-footerContainer": {
-                    borderTop: "none",
-                    backgroundColor: colors.blueAccent[700],
-                    justifyContent: "space-between", // Align items evenly
-                    align:"center"
-                },
-                "& .MuiCheckbox-root": {
-                    color: `${colors.greenAccent[200]} !important`,
-                },
-            }}
-        >
-            <DataGrid  rows={data} columns={columns} />
+        <Box m="20px">
+            <Header title="User" subtitle="Managing the Users" />
+            {data && (
+                <Box
+                    m="40px 0 0 0"
+                    height="75vh"
+                    sx={{
+                        "& .MuiDataGrid-root": {
+                            border: "none",
+                        },    
+                        "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                            justifyContent: "space-between", // Align items evenly
+                            align: "center"
+                        }
+                    }}
+                >
+                    <DataGrid rows={data} columns={columns} />
+                </Box>
+            )}
         </Box>
-    )}
-</Box>
 
     );
 };
