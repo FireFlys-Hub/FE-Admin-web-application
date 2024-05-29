@@ -7,12 +7,22 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import SearchIcon from "@mui/icons-material/Search";
 import Tooltip from '@mui/material/Tooltip';
-
+import useAuthService from "../../services/authService";
+import { useNavigate } from "react-router-dom";
 const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const tooltipTitle = theme.palette.mode === 'dark' ? 'Set theme to Light' : 'Set theme to Dark';
+  const {getLogout} = useAuthService();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const logout = await getLogout();
+    if (logout) {
+      window.location.reload();
+    }
+  };
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       <Box
@@ -37,7 +47,7 @@ const Topbar = () => {
           </IconButton>
         </Tooltip>
         <Tooltip title="Logout">
-          <IconButton>
+          <IconButton  onClick={handleLogout}>
             <ExitToAppOutlinedIcon />
           </IconButton>
         </Tooltip>
