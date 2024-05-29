@@ -49,7 +49,7 @@ const Login = () => {
             // result này đang là true
             if (result) {
                 console.log('Login successful');
-                navigate('/')
+                // navigate('/')
                 window.location.href = '/';
             } else {
                 console.log('Login failed', error);

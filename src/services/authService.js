@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../custom/axios';
 import Cookies from 'js-cookie';
 
 const useAuthService = () => {
@@ -24,10 +24,11 @@ const useAuthService = () => {
 
     const postLogin = async (email, password) => {
         try {
-            const res = await axios.post('http://127.0.0.1:8000/api/login', {
+            const res = await axios.post('/login', {
                 email: email,
                 password: password
             });
+            console.log(res);
     
             if (res.data.status === true && res.data.user.role === 1) {
                 const user = res.data.user;
@@ -58,7 +59,7 @@ const useAuthService = () => {
     const refreshAccessToken = async () => {
         try {
             const refreshToken = Cookies.get('refreshToken');
-            const response = await axios.post('http://127.0.0.1:8000/api/refresh', { refresh_token: refreshToken });
+            const response = await axios.post('/refresh', { refresh_token: refreshToken });
 
             const newAccessToken = response.data.authorization.access_token;
             const newRefreshToken = response.data.authorization.refresh_token;

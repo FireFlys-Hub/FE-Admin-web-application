@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from '../custom/axios';
+
 // Biến lưu trữ dữ liệu
 let users = [];
 let categories = [];
@@ -7,10 +8,17 @@ let categories = [];
 const fetchData = async () => {
   try {
     // Lấy dữ liệu users
-    const usersResponse = await axios.get('http://127.0.0.1:8000/api/admin/user');
+    const token = JSON.parse(sessionStorage.getItem('account')).token;
+    const usersResponse = await axios.get('/admin/user',{
+      headers: {
+        'Authorization': `Bearer ${token}`
+    }
+    }
+
+    );
     users = usersResponse.data;
     // Lấy dữ liệu contacts
-    const contactsResponse = await axios.get('http://127.0.0.1:8000/api/admin/category');
+    const contactsResponse = await axios.get('/admin/category');
     categories = contactsResponse.data;
     console.log('Data fetched successfully');
   } catch (error) {
