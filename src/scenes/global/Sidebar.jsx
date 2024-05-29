@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
@@ -41,22 +41,21 @@ const SideBar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const location = useLocation();
 
   useEffect(() => {
-    const selectedItem = getItemByPathname(location.pathname);
+    const pathname = window.location.pathname;
+    const selectedItem = getItemByPathname(pathname);
     if (selectedItem) {
       setSelected(selectedItem.title);
     }
-  }, [location.pathname]);
+  }, []);
 
   const getItemByPathname = (pathname) => {
     const items = [
       { title: "Dashboard", to: "/" },
       { title: "Manage User", to: "/user" },
-      { title: "Manage Products", to: "/product" },
       { title: "Contacts Information", to: "/contacts" },
-      { title: "Manage Order", to: "/order" },
+      { title: "Manage Orders", to: "/order" },
       { title: "Profile Form", to: "/form" },
       { title: "Wishlist", to: "/wishlist" },
       { title: "Bar Chart", to: "/bar" },

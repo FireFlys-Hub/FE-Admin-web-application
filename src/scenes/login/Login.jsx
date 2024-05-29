@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -14,7 +14,7 @@ import useAuthService from '../../services/authService';
 const Login = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -49,8 +49,7 @@ const Login = () => {
             // result này đang là true
             if (result) {
                 console.log('Login successful');
-                history.push('/user')
-                window.location.reload();
+                navigate('/')
             } else {
                 console.log('Login failed', error);
             }

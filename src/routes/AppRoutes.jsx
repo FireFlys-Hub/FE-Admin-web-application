@@ -1,24 +1,41 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
-import Login from "../scenes/login/Login";
-import Dashboard from "../scenes/dashboard";
-import PageNotFound from "../scenes/error/PageNotFound";
-import PrivateRoutes from "./PrivateRoutes";
-import User from "../scenes/user/Users";
+import { Outlet,Navigate } from "react-router-dom";
+import Topbar from "../scenes/global/Topbar";
+import { Box } from "@mui/material";
+import SideBar from "../scenes/global/Sidebar";
 
-
-const AppRoutes = (props) => {
+const AuthLayout = () => {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
+};
+const DashboardLayout = ({ children }) => {
   return (
     <>
-      <Switch>
-        <Route path="/login" component={Login} />
-        <PrivateRoutes exact path='/' component={Dashboard} />
-        <PrivateRoutes path='/user' component={User} />
-        <Route path="*" component={PageNotFound} />
-      </Switch>
+      <Box display="flex" flexDirection="row">
+        <SideBar />
+        <Box width="100%">
+          <Topbar />
+          <main>
+          <Outlet />
+          </main>
+        </Box>
+      </Box>
     </>
   );
 };
-
-
-export default AppRoutes;
+const ProtectedRoute = ({ user, children }) => {
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
+const PublicRoute = ({ user, children }) => {
+  if (user) {
+    return <Navigate to="/dashboard" />;
+  }
+  return children;
+};
+export  {AuthLayout , DashboardLayout,ProtectedRoute,PublicRoute};
