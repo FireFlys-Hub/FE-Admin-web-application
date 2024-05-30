@@ -53,6 +53,7 @@ const SideBar = () => {
   const getItemByPathname = (pathname) => {
     const items = [
       { title: "Dashboard", to: "/" },
+      { title: "Dashboard", to: "/dashboard" },
       { title: "Manage User", to: "/user" },
       { title: "Contacts Information", to: "/contacts" },
       { title: "Manage Orders", to: "/order" },
