@@ -1,33 +1,40 @@
+import React, { useState, useEffect } from "react";
 import { Box, Typography, useTheme, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import Header from "../../components/Header";
-import { useState, useEffect } from "react";
-// mock data data.js
-import { users, fetchData } from "../../data/data";
+import useUserService from "../../data/user";
+import UpdateUser from './update'; // Import the modal
 
 const User = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [data, setData] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const {AllUsers} = useUserService();
+
     useEffect(() => {
-        const loadData = async () => {
+        const fetchDataAndSetData = async () => {
             try {
-                await fetchData();
-                setData(users);
+                const result = await AllUsers();
+                setData(result);
             } catch (error) {
                 console.error('Error fetching data', error);
             }
-        }
-        loadData();
+        };
+
+        fetchDataAndSetData();
     }, []);
+
     const renderAccessLabel = (role) => {
         return role === 1 ? "Admin" : "User";
     };
+
     const columns = [
         { field: "id", headerName: "ID" },
         { field: "name", headerName: "Name", flex: 1 },
@@ -64,7 +71,7 @@ const User = () => {
             headerName: "Action",
             renderCell: ({ row }) => (
                 <Box display="flex" justifyContent="center">
-                    <IconButton color={colors.grey[500]} onClick={() => handleUpdate(row)}>
+                    <IconButton color={colors.grey[500]} onClick={() => handleEdit(row)}>
                         <EditNoteOutlinedIcon />
                     </IconButton>
                     <IconButton color={colors.redAccent[500]} onClick={() => handleDelete(row)}>
@@ -74,14 +81,17 @@ const User = () => {
             ),
         }
     ];
-    const handleUpdate = (row) => {
-        // Implement update logic here
-        console.log("Update action clicked for row:", row);
+
+    const handleEdit = (row) => {
+        setSelectedUser(row);
+        setOpen(true);
     };
+
     const handleDelete = (row) => {
         // Implement delete logic here
         console.log("Delete action clicked for row:", row);
     };
+
     return (
         <Box m="20px">
             <Header title="User" subtitle="Managing the Users" />
@@ -99,16 +109,16 @@ const User = () => {
                         "& .MuiDataGrid-footerContainer": {
                             borderTop: "none",
                             backgroundColor: colors.blueAccent[700],
-                            justifyContent: "space-between", // Align items evenly
-                            align: "center"
+                            justifyContent: "space-between",
+                            alignItems: "center"
                         }
                     }}
                 >
-                    <DataGrid rows={data} columns={columns} />
+                    <DataGrid rows={data} columns={columns} getRowId={(row) => row.id}  />
                 </Box>
             )}
+            <UpdateUser open={open} onClose={() => setOpen(false)} user={selectedUser} />
         </Box>
-
     );
 };
 
