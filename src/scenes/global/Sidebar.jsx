@@ -36,7 +36,7 @@ const Item = ({ title, to, icon }) => {
   );
 };
 
-const Sidebar = () => {
+const SideBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -53,6 +53,7 @@ const Sidebar = () => {
   const getItemByPathname = (pathname) => {
     const items = [
       { title: "Dashboard", to: "/" },
+      { title: "Dashboard", to: "/dashboard" },
       { title: "Manage User", to: "/user" },
       { title: "Contacts Information", to: "/contacts" },
       { title: "Manage Orders", to: "/order" },
@@ -205,4 +206,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SideBar;
