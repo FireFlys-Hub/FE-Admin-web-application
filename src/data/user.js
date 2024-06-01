@@ -1,50 +1,41 @@
-import axios from '../custom/axios';
-
-const token = JSON.parse(sessionStorage.getItem('account'))?.token;
+import { useContext } from "react";
+import { UserContext } from '../context/auth/UserContext';
+import axios from "../custom/axios";
 
 const useUserService = () => {
+  const { user } = useContext(UserContext);
+  const token = user.token;
+
   const AllUsers = async () => {
     try {
       const res = await axios.get('/admin/user', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
-      }
-      );
-      console.log(res.data);
+      });
       return res.data;
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Error during fetching users:', error);
       return false;
     }
   };
 
   const UpdateUser = async (formData) => {
     try {
-      // const formData = {
-      //   name: data.name,
-      //   email:data.email,
-      //   phone_number:data.phone_number,
-      //   image_update:data.image_update
-      // }
-  
       const res = await axios.post(`/admin/user/update/${formData.id}`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
       console.log(res.data);
-      console.log(formData);
-      // Xử lý phản hồi từ máy chủ (nếu cần)
-      return true; // Trả về dữ liệu phản hồi từ máy chủ (nếu có)
+      return true; 
     } catch (error) {
       console.error('Error updating user:', error);
-      throw error; // Ném lỗi để xử lý ở phần gọi hàm
+      throw error; 
     }
   };
-  
-  return {AllUsers,UpdateUser};
+
+  return { AllUsers, UpdateUser };
 }
+
 export default useUserService;
-
-

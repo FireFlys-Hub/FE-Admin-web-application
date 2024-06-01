@@ -3,7 +3,7 @@ import { Button, Modal, Input, Form, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import useUserService from "../../data/user";
 
-const UpdateUser = ({ open, onClose, user }) => {
+const UpdateUser = ({ open, onClose, user, onUpdateSuccess }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { UpdateUser } = useUserService();
   const [form] = Form.useForm();
@@ -23,7 +23,7 @@ const UpdateUser = ({ open, onClose, user }) => {
     try {
       const values = await form.validateFields();
       setConfirmLoading(true);
-  
+
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('email', values.email);
@@ -32,11 +32,12 @@ const UpdateUser = ({ open, onClose, user }) => {
         formData.append('image_update', values.image_update[0].originFileObj);
       }
       formData.append('id', user.id);
-  
+
       await UpdateUser(formData);
-  
+
       message.success('User updated successfully');
       onClose();
+      onUpdateSuccess();  // Call the onUpdateSuccess function to fetch the updated data
     } catch (error) {
       console.error('Error updating user:', error);
       message.error('Failed to update user. Please try again later.');
@@ -44,7 +45,6 @@ const UpdateUser = ({ open, onClose, user }) => {
       setConfirmLoading(false);
     }
   };
-  
 
   const handleCancel = () => {
     onClose();
@@ -65,10 +65,7 @@ const UpdateUser = ({ open, onClose, user }) => {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      <Form
-        form={form}
-        layout="vertical"
-      >
+      <Form form={form} layout="vertical">
         <Form.Item
           name="name"
           label="Name"

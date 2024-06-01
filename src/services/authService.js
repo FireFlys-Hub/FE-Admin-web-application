@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
-import axios from '../custom/axios';
 import Cookies from 'js-cookie';
+import { useContext, useState } from 'react';
+import { UserContext } from '../context/auth/UserContext';
+import axios from '../custom/axios';
 
 const useAuthService = () => {
-    const [user, setUser] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
     const [tokenExpires, setTokenExpires] = useState(null);
-
+    const {login, logout, user} = useContext(UserContext);
+    const token =  user.token;
     const setAuthToken = (accessToken, refreshToken, expiresInMilliseconds) => {
         const expiresDate = new Date(Date.now() + expiresInMilliseconds);
         Cookies.set('authToken', accessToken, {
@@ -22,6 +24,7 @@ const useAuthService = () => {
         setTokenExpires(expiresDate);
     };
 
+  
     const postLogin = async (email, password) => {
         try {
             const res = await axios.post('/login', {
@@ -33,24 +36,24 @@ const useAuthService = () => {
             if (res.data.status === true && res.data.user.role === 1) {
                 const user = res.data.user;
                 const accessToken = res.data.authorization.access_token;
+                const email = res.data.user.email;
                 console.log("THis i access token",accessToken);
-                const refreshToken = res.data.authorization.refresh_token;
-                const expiresInMilliseconds = 60 * 1000; // 10 seconds
-                setUser(user);
+                setUserData(user);
                 let data = {
                     isAuthenticated:true,
-                    token: accessToken
-                }
-                sessionStorage.setItem('account',JSON.stringify(data))
-                return true; // Trả về user khi đăng nhập thành công
+                    token: accessToken,
+                    email: email,
+                };
+                login(data);
+                return user; // Trả về user khi đăng nhập thành công
             } else {
-                setUser(null);
+                setUserData(null);
                 return false; // Trả về false khi đăng nhập không thành công
             }
         } catch (err) {
             console.error('Error during login:', err);
             setError(err);
-            setUser(null);
+            setUserData(null);
             return false; // Trả về false nếu xảy ra lỗi
         }
     };
@@ -75,14 +78,13 @@ const useAuthService = () => {
 
     const getLogout = async () => {
         try {
-            const token = JSON.parse(sessionStorage.getItem('account')).token;
             const res = await axios.get('http://127.0.0.1:8000/api/logout', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             if (res.data.status === true) {
-                sessionStorage.removeItem('account');
+                logout();
                 return true;
             } else {
                 return false;

@@ -1,41 +1,26 @@
-import React from "react";
-import { Outlet,Navigate } from "react-router-dom";
-import Topbar from "../scenes/global/Topbar";
-import { Box } from "@mui/material";
-import SideBar from "../scenes/global/Sidebar";
+import { Route, Routes } from "react-router-dom";
+import Login from "../scenes/login/Login";
+import PrivateRoute from "./PrivateRoutes";
+import Dashboard from "../scenes/dashboard/Dashboard";
+import User from "../scenes/user/Users";
+import Layout from "../scenes/layout/Layout"; // Ensure you import the correct Layout component
 
-const AuthLayout = () => {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
-};
-const DashboardLayout = ({ children }) => {
+const AppRouter = () => {
   return (
     <>
-      <Box display="flex" flexDirection="row">
-        <SideBar />
-        <Box width="100%">
-          <Topbar />
-          <main>
-          <Outlet />
-          </main>
-        </Box>
-      </Box>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        
+        {/* Protected Routes */}
+        <Route path="/" element={<PrivateRoute />}>
+          <Route element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/user" element={<User />} />
+          </Route>
+        </Route>
+      </Routes>
     </>
   );
 };
-const ProtectedRoute = ({ user, children }) => {
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-  return children;
-};
-const PublicRoute = ({ user, children }) => {
-  if (user) {
-    return <Navigate to="/dashboard" />;
-  }
-  return children;
-};
-export  {AuthLayout , DashboardLayout,ProtectedRoute,PublicRoute};
+
+export default AppRouter;
