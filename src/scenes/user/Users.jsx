@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, useTheme, IconButton } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
+import { UserContext } from "../../context/auth/UserContext";
 import useUserService from "../../data/user";
+import { tokens } from "../../theme";
 import UpdateUser from './update'; // Import the modal
 
 const User = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
     const [open, setOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const {AllUsers} = useUserService();
+    const { AllUsers } = useUserService();
 
     useEffect(() => {
-        const fetchDataAndSetData = async () => {
-            try {
-                const result = await AllUsers();
-                setData(result);
-            } catch (error) {
-                console.error('Error fetching data', error);
-            }
-        };
-
-        fetchDataAndSetData();
+        fetchData();
     }, []);
+
+    // const { user } = React.useContext(UserContext);
+    // console.log(">>>>check user login");
+
+    const fetchData = async () => {
+        const userData = await AllUsers();
+        if (userData) {
+            setData(userData);
+        }
+    };
 
     const renderAccessLabel = (role) => {
         return role === 1 ? "Admin" : "User";
@@ -52,7 +54,7 @@ const User = () => {
                     justifyContent="flex-start"
                     marginTop="10px"
                     backgroundColor={
-                        role === "1"
+                        role === 1
                             ? colors.greenAccent[600]
                             : role === "manager"
                                 ? colors.blue[600]
@@ -92,17 +94,21 @@ const User = () => {
         console.log("Delete action clicked for row:", row);
     };
 
+    const handleUpdateSuccess = () => {
+        fetchData(); // Fetch data again after successful update
+    };
+
     return (
         <Box m="20px">
             <Header title="User" subtitle="Managing the Users" />
-            {data && (
+            {data.length > 0 && (
                 <Box
                     m="40px 0 0 0"
                     height="75vh"
                     sx={{
                         "& .MuiDataGrid-root": {
                             border: "none",
-                        },    
+                        },
                         "& .MuiDataGrid-virtualScroller": {
                             backgroundColor: colors.primary[400],
                         },
@@ -114,10 +120,20 @@ const User = () => {
                         }
                     }}
                 >
-                    <DataGrid rows={data} columns={columns} getRowId={(row) => row.id}  />
+                    <DataGrid
+                        rows={data}
+                        columns={columns}
+                        initialState={{
+                            pagination: {
+                                paginationModel: { page: 0, pageSize: 10 },
+                            },
+                        }}
+                        pageSizeOptions={[5, 10]}
+                        checkboxSelection
+                    />
                 </Box>
             )}
-            <UpdateUser open={open} onClose={() => setOpen(false)} user={selectedUser} />
+            <UpdateUser open={open} onClose={() => setOpen(false)} user={selectedUser} onUpdateSuccess={handleUpdateSuccess} />
         </Box>
     );
 };

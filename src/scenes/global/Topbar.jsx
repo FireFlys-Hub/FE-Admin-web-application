@@ -1,14 +1,14 @@
-import { Box, IconButton, useTheme } from "@mui/material";
-import { useContext } from "react";
-import { ColorModeContext, tokens } from "../../theme";
-import InputBase from "@mui/material/InputBase";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import { Box, IconButton, useTheme } from "@mui/material";
+import InputBase from "@mui/material/InputBase";
 import Tooltip from '@mui/material/Tooltip';
-import useAuthService from "../../services/authService";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuthService from "../../services/authService";
+import { ColorModeContext, tokens } from "../../theme";
 const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -17,10 +17,12 @@ const Topbar = () => {
   const {getLogout} = useAuthService();
   const navigate = useNavigate();
 
+
   const handleLogout = async () => {
-    const logout = await getLogout();
-    if (logout) {
-      window.location.reload();
+    const userLogout = await getLogout();
+    if (userLogout) {
+
+      navigate('/login')
     }
   };
   return (

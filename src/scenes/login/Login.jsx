@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@emotion/react';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { tokens } from '../../theme';
-import { useTheme } from '@emotion/react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/auth/UserContext';
 import useAuthService from '../../services/authService';
+import { tokens } from '../../theme';
+
 
 const Login = () => {
     const theme = useTheme();
@@ -19,14 +21,16 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const { postLogin, error, user } = useAuthService();
-
-
+    const { postLogin, error } = useAuthService();
+    const { user } = useContext(UserContext);
+    useEffect(()=>{
+        if(user.isAuthenticated === true){
+            navigate('/');
+        }
+    },[])
     const handleLogin = async (e) => {
         e.preventDefault();
-
         let isValid = true;
-
         if (!email) {
             setEmailError('Email không được để trống');
             isValid = false;
@@ -36,21 +40,17 @@ const Login = () => {
         } else {
             setEmailError('');
         }
-
         if (!password) {
             setPasswordError('Mật khẩu không được để trống');
             isValid = false;
         } else {
             setPasswordError('');
         }
-
         if (isValid) {
             const result = await postLogin(email, password);
-            // result này đang là true
+            console.log(result);
             if (result) {
-                console.log('Login successful');
-                // navigate('/')
-                window.location.href = '/';
+                navigate('/');
             } else {
                 console.log('Login failed', error);
             }
@@ -85,11 +85,13 @@ const Login = () => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     };
-    const handlePressEnter = (event)=>{
-        if(event.charCode === 13 && event.code ==="Enter"){
-            console.log("enter");
+
+    const handlePressEnter = (event) => {
+        if (event.charCode === 13 && event.code === "Enter") {
+            handleLogin(event);
         }
     };
+
     return (
         <Grid container component="main" className="flex justify-center items-center min-h-screen">
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={1} square>
@@ -111,7 +113,7 @@ const Login = () => {
                             id="email"
                             label="Email"
                             name="email"
-                            autoFocus
+                      con   autoFocus
                             className="mb-4"
                             value={email}
                             onChange={handleChangeEmail}
@@ -133,7 +135,7 @@ const Login = () => {
                             onChange={handleChangePassword}
                             error={Boolean(passwordError)}
                             helperText={passwordError}
-                            onKeyDown={(event)=>handlePressEnter(event)}
+                            onKeyDown={handlePressEnter}
                         />
                         <Button
                             type="submit"
