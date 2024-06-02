@@ -1,30 +1,29 @@
+import React, { useEffect, useState } from "react";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { UserContext } from "../../context/auth/UserContext";
+import useUserService from "../../data/user";
+import { tokens } from "../../theme";
+import Header from "../../components/Header";
+import UpdateUser from './update'; // Import the modal
+import DeleteUser from "./Delete";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import React, { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import { UserContext } from "../../context/auth/UserContext";
-import useUserService from "../../data/user";
-import { tokens } from "../../theme";
-import UpdateUser from './update'; // Import the modal
 
 const User = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [data, setData] = useState([]);
-    const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const { AllUsers } = useUserService();
 
     useEffect(() => {
         fetchData();
     }, []);
-
-    // const { user } = React.useContext(UserContext);
-    // console.log(">>>>check user login");
 
     const fetchData = async () => {
         const userData = await AllUsers();
@@ -86,12 +85,12 @@ const User = () => {
 
     const handleEdit = (row) => {
         setSelectedUser(row);
-        setOpen(true);
+        setOpenUpdate(true);
     };
 
     const handleDelete = (row) => {
-        // Implement delete logic here
-        console.log("Delete action clicked for row:", row);
+        setSelectedUser(row);
+        setOpenDelete(true);
     };
 
     const handleUpdateSuccess = () => {
@@ -133,7 +132,8 @@ const User = () => {
                     />
                 </Box>
             )}
-            <UpdateUser open={open} onClose={() => setOpen(false)} user={selectedUser} onUpdateSuccess={handleUpdateSuccess} />
+            <UpdateUser open={openUpdate} onClose={() => setOpenUpdate(false)} user={selectedUser} onUpdateSuccess={handleUpdateSuccess} />
+            <DeleteUser open={openDelete} onClose={() => setOpenDelete(false)} user={selectedUser} onUpdateSuccess={handleUpdateSuccess} />
         </Box>
     );
 };
