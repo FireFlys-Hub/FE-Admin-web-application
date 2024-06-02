@@ -34,8 +34,21 @@ const useUserService = () => {
       throw error; 
     }
   };
+  const DeleteUser = async (id) =>{
+    try {
+      const res = await axios.delete(`/admin/user/delete/${id}`,{
+        headers:{
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      return true;
+    } catch (error) {
+      console.error("Error delete user",error);
+      throw error;
+    };
+  };
 
-  return { AllUsers, UpdateUser };
+  return { AllUsers, UpdateUser, DeleteUser };
 }
 
 export default useUserService;

@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/auth/UserContext';
 import useAuthService from '../../services/authService';
 import { tokens } from '../../theme';
+import { message } from 'antd';
+
 
 
 const Login = () => {
@@ -50,9 +52,11 @@ const Login = () => {
             const result = await postLogin(email, password);
             console.log(result);
             if (result) {
+                message.success('Login successfully!')
                 navigate('/');
             } else {
                 console.log('Login failed', error);
+                message.error('Incorrect email or password. Please login again');
             }
         }
     };
