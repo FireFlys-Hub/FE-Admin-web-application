@@ -13,7 +13,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import imageProfile from "../../assets/user.png";
 
 const Item = ({ title, to, icon }) => {
@@ -57,6 +57,7 @@ const SideBar = () => {
       { title: "Manage User", to: "/user" },
       { title: "Contacts Information", to: "/contacts" },
       { title: "Manage Orders", to: "/order" },
+      { title: "Manage Categories", to: "/category" },
       { title: "Profile Form", to: "/form" },
       { title: "Wishlist", to: "/wishlist" },
       { title: "Bar Chart", to: "/bar" },
@@ -140,11 +141,7 @@ const SideBar = () => {
             </Box>
           )}
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            <Item
-              title="Dashboard"
-              to="/"
-              icon={<HomeOutlinedIcon />}
-            />
+            <Item title="Dashboard" to="/" icon={<HomeOutlinedIcon />} />
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -156,6 +153,11 @@ const SideBar = () => {
               title="Manage User"
               to="/user"
               icon={<PeopleOutlinedIcon />}
+            />
+            <Item
+              title="Manage Categories"
+              to="/category"
+              icon={<Inventory2OutlinedIcon />}
             />
             <Item
               title="Manage Products"
@@ -189,11 +191,7 @@ const SideBar = () => {
             >
               Charts
             </Typography>
-            <Item
-              title="Bar Chart"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-            />
+            <Item title="Bar Chart" to="/bar" icon={<BarChartOutlinedIcon />} />
             <Item
               title="Line Chart"
               to="/line"
