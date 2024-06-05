@@ -1,32 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Input, Form, Upload, message } from 'antd';
 import {CRUDCategories} from "../../data/category";
-const UpdateCategoryModal = (props) => {
+const CreateCategoryModal = (props) => {
   const { open, onClose, category, onUpdateSuccess } = props;
-  const {UpdateCategory} = CRUDCategories();
+  const {CreateCategory} = CRUDCategories();
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
-  console.log("lam",category);
-  useEffect(() => {
-    if (category) {
-        form.setFieldsValue({
-        kind: category.kind,
-      });
-    }else{
-        console.log("lỗi");
-    }
-  }, [category, form]);
 
   const handleOk = async ()  => {
     try {
         const values = await form.validateFields();
         setConfirmLoading(true);
-        const formData = {
-          'kind': values.kind,
-          'id':category.id
-        }
-        await UpdateCategory(formData);
-        message.success('Category updated successfully');
+        const formData = new FormData();
+        formData.append('kind', values.kind);
+        await CreateCategory(formData);
+        message.success('Category create successfully');
         onClose();
         onUpdateSuccess(); 
       } catch (error) {
@@ -40,17 +28,16 @@ const UpdateCategoryModal = (props) => {
 
   return (
     <Modal
-      title="Edit Category"
+      title="Update Category"
       visible={open}
       onOk={handleOk}
-      confirmLoading={confirmLoading}
       onCancel={onClose}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="kind"
-          label="Kind of category"
-          rules={[{ required: true, message: 'Please input the kind of category!' }]}
+          label="Kind"
+          rules={[{ required: true, message: "Please input the category kind!" }]}
         >
           <Input />
         </Form.Item>
@@ -59,4 +46,4 @@ const UpdateCategoryModal = (props) => {
   );
 };
 
-export default UpdateCategoryModal;
+export default CreateCategoryModal;

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import { CRUDCategories } from "../../data/category";
 import Box from "@mui/material/Box";
-import { IconButton, useTheme } from "@mui/material";
+import { Button, IconButton, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import CreateCategoryModal from "./Create";
 import UpdateCategoryModal from "./Update";
 import DeleteCategory from "./Delete";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -16,9 +18,10 @@ const Categories = () => {
   const colors = tokens(theme.palette.mode);
   const [category, setCategory] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+  
   useEffect(() => {
     fetchData();
   }, []);
@@ -31,6 +34,7 @@ const Categories = () => {
   };
 
   const showModalEditCategory = (row) => {
+    console.log("Selected category for edit:", row); 
     setCategory(row);
     setIsModalOpen(true);
   };
@@ -51,24 +55,31 @@ const Categories = () => {
   const handleModalCloseModalDelete = () => {
     setIsDeleteModalOpen(false);
   };
+
+  const showModalCreateCategory = () => {
+    setIsCreateModalOpen(true);
+  };
+  const handleModalCloseModalCreate = () => {
+    setIsCreateModalOpen(false);
+  };
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", flex: 1,},
     {
       field: "kind",
       headerName: "Kind",
-      width: 150,
+      flex:1,
       editable: true,
     },
     {
       field: "created_at",
       headerName: "Created_at",
-      width: 150,
+      flex:1,
       editable: true,
     },
     {
       field: "updated_at",
       headerName: "Updated_at",
-      width: 150,
+      flex:1,
       editable: true,
     },
     {
@@ -96,7 +107,13 @@ const Categories = () => {
 
   return (
     <Box m="20px">
-      <Header title="Categories" subtitle="Managing the Categories" />
+      <Header title="Categories" subtitle="Managing the Categories" />;
+      <IconButton
+            color={colors.redAccent[500]}
+            onClick={() =>{showModalCreateCategory()}}
+          >
+            <CreateNewFolderIcon />
+          </IconButton>
       {categories.length > 0 && (
         <DataGrid
           rows={categories}
@@ -110,6 +127,13 @@ const Categories = () => {
           checkboxSelection
         />
       )}
+      <CreateCategoryModal
+        open={isCreateModalOpen}
+        onClose={handleModalCloseModalCreate}
+        category={category}
+        onUpdateSuccess={handleUpdateSuccess}
+      />
+      {console.log("Current category:", category)};
       <UpdateCategoryModal
         open={isEditModalOpen}
         onClose={handleModalCloseModalEdit}
@@ -127,6 +151,3 @@ const Categories = () => {
 };
 
 export default Categories;
-
-
-

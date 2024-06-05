@@ -17,10 +17,9 @@ const CRUDCategories = () => {
       return false;
     }
   };
-
-  const UpdateCategory =async (category) => {
+  const CreateCategory =async (formData) => {
     try {
-      const res = await axios.post(`/admin/category/update/${category.id}`, category, {
+      const res = await axios.post(`/admin/category/create`, formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -32,7 +31,22 @@ const CRUDCategories = () => {
       throw error; 
     }
   };
-  const DeleteCategory = async (id) =>{
+
+  const UpdateCategory =async (formData) => {
+    try {
+      const res = await axios.put(`/admin/category/update/${formData.id}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log(res.data);
+      return true; 
+    } catch (error) {
+      console.error('Error updating category:', error);
+      throw error; 
+    }
+  };
+  const DeleteCategoryById = async (id) =>{
     try {
       const res = await axios.delete(`/admin/category/delete/${id}`,{
         headers:{
@@ -45,7 +59,7 @@ const CRUDCategories = () => {
       throw error;
     };
   }
-  return { GetCategories, UpdateCategory, DeleteCategory };
+  return { GetCategories, UpdateCategory, DeleteCategoryById, CreateCategory };
 }
 
 

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Modal, message } from 'antd';
 import { CRUDCategories } from "../../data/category";
 const DeleteCategory = ({ open, onClose, category, onUpdateSuccess }) => {
-    const {DeleteCategory} = CRUDCategories();
+    const {DeleteCategoryById} = CRUDCategories();
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const handleOk = async () => {
     setConfirmLoading(true);
     try {
-      await DeleteCategory(category.id);
+      await DeleteCategoryById(category.id);
       message.success('Category deleted successfully');
       setConfirmLoading(false);
       onClose();
