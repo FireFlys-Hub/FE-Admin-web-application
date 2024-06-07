@@ -6,12 +6,8 @@ const CRUDCategories = () => {
   const token = user.token;
   const GetCategories = async () => {
     try {
-      const response = await axios.get("/admin/category", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
+      const response = await axios.get("/admin/category");
+      return response;
     } catch (error) {
       console.error("Error during fetching categories:", error);
       return false;
@@ -19,12 +15,8 @@ const CRUDCategories = () => {
   };
   const CreateCategory =async (formData) => {
     try {
-      const res = await axios.post(`/admin/category/create`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      console.log(res.data);
+      const res = await axios.post(`/admin/category/create`)
+      console.log(res);
       return true; 
     } catch (error) {
       console.error('Error updating category:', error);
@@ -34,11 +26,7 @@ const CRUDCategories = () => {
 
   const UpdateCategory =async (formData) => {
     try {
-      const res = await axios.put(`/admin/category/update/${formData.id}`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const res = await axios.put(`/admin/category/update/${formData.id}`, formData);
       console.log(res.data);
       return true; 
     } catch (error) {
@@ -48,11 +36,7 @@ const CRUDCategories = () => {
   };
   const DeleteCategoryById = async (id) =>{
     try {
-      const res = await axios.delete(`/admin/category/delete/${id}`,{
-        headers:{
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const res = await axios.delete(`/admin/category/delete/${id}`);
       return true;
     } catch (error) {
       console.error("Error delete category",error);
@@ -63,4 +47,4 @@ const CRUDCategories = () => {
 }
 
 
-export { CRUDCategories};
+export {CRUDCategories};

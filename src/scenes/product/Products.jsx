@@ -1,71 +1,59 @@
 import React, { useEffect, useState } from "react";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import useUserService from "../../data/user";
+import { Box, IconButton, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import UpdateUser from './update'; // Import the modal
-import DeleteUser from "./Delete";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import { DataGrid } from "@mui/x-data-grid";
+import useProductService from "../../data/product";
+import { Button } from "antd";
 
-const User = () => {
+const Product = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [data, setData] = useState([]);
+    const [product, setProduct] = useState([]);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const { AllUsers } = useUserService();
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const { getAllProduct } = useProductService();
+
+    const [size, setSize] = useState('large'); 
 
     useEffect(() => {
         fetchData();
     }, []);
 
     const fetchData = async () => {
-        const userData = await AllUsers();
-        if (userData) {
-            setData(userData);
+        const productData = await getAllProduct();
+        if (productData) {
+            setProduct(productData);
+            console.log("Fetched product data:", productData);
         }
-    };
-
-    const renderAccessLabel = (role) => {
-        return role === 1 ? "Admin" : "User";
     };
 
     const columns = [
         { field: "id", headerName: "ID" },
         { field: "name", headerName: "Name", flex: 1 },
-        { field: "phone_number", headerName: "Phone Number", flex: 1 },
-        { field: "email", headerName: "Email", flex: 1 },
+        { field: "describe_product", headerName: "Describe Product", flex: 1 },
         {
-            field: "role",
-            headerName: "Role",
+            field: "discount", headerName: "Discount", flex: 1, valueFormatter: (value) => {
+                if (value == null) {
+                    return '';
+                }
+                return `${value.toLocaleString()} (%)`;
+            },
+        },
+        { field: "quantity_product", headerName: "Quantity", flex: 1 },
+        {
+            field: "sell_price",
+            headerName: "Sell price",
             flex: 1,
-            renderCell: ({ row: { role } }) => (
-                <Box
-                    width="40%"
-                    p="5px"
-                    display="flex"
-                    justifyContent="flex-start"
-                    marginTop="10px"
-                    backgroundColor={
-                        role === 1
-                            ? colors.greenAccent[600]
-                            : role === "manager"
-                                ? colors.blue[600]
-                                : colors.greenAccent[700]
-                    }
-                    borderRadius="4px"
-                >
-                    {role === 1 ? <AdminPanelSettingsOutlinedIcon /> : <LockOpenOutlinedIcon />}
-                    <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-                        {renderAccessLabel(role)}
-                    </Typography>
-                </Box>
-            ),
+            valueFormatter: (value) => {
+                if (value == null) {
+                    return '';
+                }
+                return `${value.toLocaleString()} ($)`;
+            },
         },
         {
             headerName: "Action",
@@ -83,12 +71,12 @@ const User = () => {
     ];
 
     const handleEdit = (row) => {
-        setSelectedUser(row);
+        setSelectedProduct(row);
         setOpenUpdate(true);
     };
 
     const handleDelete = (row) => {
-        setSelectedUser(row);
+        setSelectedProduct(row);
         setOpenDelete(true);
     };
 
@@ -98,8 +86,9 @@ const User = () => {
 
     return (
         <Box m="20px">
-            <Header title="User" subtitle="Managing the Users" />
-            {data.length > 0 && (
+            <Header title="Product" subtitle="Managing the Products" />
+            <Button size={size} type="default">Create</Button>
+            {product.length > 0 && (
                 <Box
                     m="40px 0 0 0"
                     height="75vh"
@@ -119,7 +108,7 @@ const User = () => {
                     }}
                 >
                     <DataGrid
-                        rows={data}
+                        rows={product}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -130,10 +119,10 @@ const User = () => {
                     />
                 </Box>
             )}
-            <UpdateUser open={openUpdate} onClose={() => setOpenUpdate(false)} user={selectedUser} onUpdateSuccess={handleUpdateSuccess} />
-            <DeleteUser open={openDelete} onClose={() => setOpenDelete(false)} user={selectedUser} onUpdateSuccess={handleUpdateSuccess} />
+            {/* <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} Product={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
+            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} Product={selectedProduct} onUpdateSuccess={handleUpdateSuccess} /> */}
         </Box>
     );
 };
 
-export default User;
+export default Product;
