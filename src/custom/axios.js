@@ -1,30 +1,48 @@
 import axios from "axios";
+import Cookies from 'js-cookie';
 
-// Set config defaults when creating the instance
 const instance = axios.create({
     baseURL: 'http://127.0.0.1:8000/api'
-  });
-  
-//   // Alter defaults after instance has been created
-//   instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// Add a request interceptor
+});
+
 instance.interceptors.request.use(function (config) {
-    // Do something before request is sent
+    const accessToken = Cookies.get('authToken');
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
     return config;
-  }, function (error) {
-    // Do something with request error
+}, function (error) {
     return Promise.reject(error);
-  });
+});
 
-// Add a response interceptor
-axios.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+instance.interceptors.response.use(function (response) {
     return response.data;
-  }, function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+}, async function (error) {
+    const refreshToken = Cookies.get('refreshToken');
+    if (error.response && error.response.status === 401 && refreshToken) {
+        const originalRequest = error.config;
+        try {
+            const response = await axios.post('/refresh', { refresh_token: refreshToken });
+            const newAccessToken = response.data.authorization.access_token;
+            const newRefreshToken = response.data.authorization.refresh_token;
+            const expiresInMilliseconds = 600000; // 10 minutes
+            Cookies.set('authToken', newAccessToken, {
+                expires: new Date(Date.now() + expiresInMilliseconds),
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Strict'
+            });
+            Cookies.set('refreshToken', newRefreshToken, {
+                expires: new Date(Date.now() + 60 * 1000), // 1 minute
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Strict'
+            });
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            return axios(originalRequest);
+        } catch (refreshError) {
+            return Promise.reject(refreshError);
+        }
+    }
     return Promise.reject(error);
-  });
+});
 
-  export default instance;
+export default instance;
