@@ -31,6 +31,17 @@ const useProductService = ()=>{
             console.error("Fail to get Category");
         }
     }
-    return {getAllProduct , CreateProduct ,getCategory}
+    const updateProduct = async (id,formData)=>{
+        try {
+            const res = await axios.post(`admin/product/update/${id}`,formData);
+            if(res){
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Fail to update product: ",error);
+        }
+    }
+    return {getAllProduct , CreateProduct ,getCategory, updateProduct}
 }
 export default useProductService;

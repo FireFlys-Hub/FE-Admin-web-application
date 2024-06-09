@@ -8,6 +8,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import useProductService from "../../data/product";
 import { Button } from "antd";
 import CreateProduct from "./Create"; // Adjust the import path as necessary
+import UpdateProduct from "./Update"; // Ensure correct path
 
 const Product = () => {
     const theme = useTheme();
@@ -19,7 +20,7 @@ const Product = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const { getAllProduct } = useProductService();
 
-    const [size, setSize] = useState('large'); 
+    const [size, setSize] = useState('large');
 
     useEffect(() => {
         fetchData();
@@ -38,8 +39,7 @@ const Product = () => {
         { field: "name", headerName: "Name", flex: 1 },
         { field: "describe_product", headerName: "Describe Product", flex: 1 },
         {
-            field: "discount", headerName: "Discount", flex: 1, valueFormatter: (params) => {
-                const value = params.value;
+            field: "discount", headerName: "Discount", flex: 1, valueFormatter: (value) => {
                 if (value == null) {
                     return '';
                 }
@@ -51,8 +51,7 @@ const Product = () => {
             field: "sell_price",
             headerName: "Sell price",
             flex: 1,
-            valueFormatter: (params) => {
-                const value = params.value;
+            valueFormatter: (value) => {
                 if (value == null) {
                     return '';
                 }
@@ -73,6 +72,7 @@ const Product = () => {
             ),
         }
     ];
+    
 
     const handleEdit = (row) => {
         setSelectedProduct(row);
@@ -87,7 +87,6 @@ const Product = () => {
     const handleUpdateSuccess = () => {
         fetchData(); // Fetch data again after successful update
     };
-
     return (
         <Box m="20px">
             <Header title="Product" subtitle="Managing the Products" />
@@ -124,8 +123,8 @@ const Product = () => {
                 </Box>
             )}
             <CreateProduct open={openCreate} onClose={() => setOpenCreate(false)} onUpdateSuccess={handleUpdateSuccess} />
-            {/* <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} Product={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
-            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} Product={selectedProduct} onUpdateSuccess={handleUpdateSuccess} /> */}
+            <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} productData={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
+            {/* <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} productData={selectedProduct} onUpdateSuccess={handleUpdateSuccess} /> */}
         </Box>
     );
 };
