@@ -53,6 +53,28 @@ const useProductService = ()=>{
             
         }
     }
-    return {getAllProduct , CreateProduct ,getCategory, updateProduct,deleteProduct}
+    const getProductDeleted = async ()=>{
+        try {
+            const res =  await axios.get('admin/product/restore');
+            if(res){
+                return res;
+            }
+            return false;
+        } catch (error) {
+            
+        }
+    }
+    const restoreProduct = async(id)=>{
+        try {
+            const res = await axios.post(`admin/product/restore/${id}`);
+            if(res){
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Fail to restore product: ",error);
+        }
+    }
+    return {getAllProduct , CreateProduct ,getCategory, updateProduct,deleteProduct,getProductDeleted, restoreProduct}
 }
 export default useProductService;

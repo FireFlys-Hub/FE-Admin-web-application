@@ -9,7 +9,8 @@ import useProductService from "../../data/product";
 import { Button } from "antd";
 import CreateProduct from "./Create";
 import UpdateProduct from "./Update";
-import DeleteProduct from "./Delete"; // Import DeleteProduct component
+import DeleteProduct from "./Delete";
+import RestoreProduct from "./Restore";
 
 const Product = () => {
     const theme = useTheme();
@@ -17,9 +18,10 @@ const Product = () => {
     const [product, setProduct] = useState([]);
     const [openCreate, setOpenCreate] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false); // New state for delete confirmation modal
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openRestore, setOpenRestore] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const { getAllProduct, deleteProduct } = useProductService(); // Include deleteProduct method
+    const { getAllProduct, deleteProduct } = useProductService();
 
     const [size, setSize] = useState('large');
 
@@ -81,18 +83,18 @@ const Product = () => {
 
     const handleDelete = (row) => {
         setSelectedProduct(row);
-        setOpenDelete(true); // Open delete confirmation modal
+        setOpenDelete(true);
     };
 
     const handleUpdateSuccess = () => {
-        fetchData(); // Fetch data again after successful update
+        fetchData();
     };
 
     const handleDeleteProduct = async () => {
         try {
             await deleteProduct(selectedProduct.id);
-            setOpenDelete(false); // Close delete confirmation modal
-            handleUpdateSuccess(); // Refresh product list
+            setOpenDelete(false);
+            handleUpdateSuccess();
         } catch (error) {
             console.error('Failed to delete product:', error);
         }
@@ -102,6 +104,7 @@ const Product = () => {
         <Box m="20px">
             <Header title="Product" subtitle="Managing the Products" />
             <Button size={size} type="default" onClick={() => setOpenCreate(true)}>Create</Button>
+            <Button size={size} type="default" onClick={() => setOpenRestore(true)}>RestoreProduct</Button>
             {product.length > 0 && (
                 <Box
                     m="40px 0 0 0"
@@ -135,7 +138,8 @@ const Product = () => {
             )}
             <CreateProduct open={openCreate} onClose={() => setOpenCreate(false)} onUpdateSuccess={handleUpdateSuccess} />
             <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} productData={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
-            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} productData={selectedProduct}  onDelete={handleDeleteProduct} /> {/* Pass delete function */}
+            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} productData={selectedProduct} onDelete={handleDeleteProduct} />
+            <RestoreProduct open={openRestore} onClose={() => setOpenRestore(false)} onUpdateSuccess={handleUpdateSuccess} />
         </Box>
     );
 };
