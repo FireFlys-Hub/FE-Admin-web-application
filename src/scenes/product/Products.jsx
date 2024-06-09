@@ -7,8 +7,9 @@ import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import { DataGrid } from "@mui/x-data-grid";
 import useProductService from "../../data/product";
 import { Button } from "antd";
-import CreateProduct from "./Create"; // Adjust the import path as necessary
-import UpdateProduct from "./Update"; // Ensure correct path
+import CreateProduct from "./Create";
+import UpdateProduct from "./Update";
+import DeleteProduct from "./Delete"; // Import DeleteProduct component
 
 const Product = () => {
     const theme = useTheme();
@@ -16,9 +17,9 @@ const Product = () => {
     const [product, setProduct] = useState([]);
     const [openCreate, setOpenCreate] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false); // New state for delete confirmation modal
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const { getAllProduct } = useProductService();
+    const { getAllProduct, deleteProduct } = useProductService(); // Include deleteProduct method
 
     const [size, setSize] = useState('large');
 
@@ -72,7 +73,6 @@ const Product = () => {
             ),
         }
     ];
-    
 
     const handleEdit = (row) => {
         setSelectedProduct(row);
@@ -81,12 +81,23 @@ const Product = () => {
 
     const handleDelete = (row) => {
         setSelectedProduct(row);
-        setOpenDelete(true);
+        setOpenDelete(true); // Open delete confirmation modal
     };
 
     const handleUpdateSuccess = () => {
         fetchData(); // Fetch data again after successful update
     };
+
+    const handleDeleteProduct = async () => {
+        try {
+            await deleteProduct(selectedProduct.id);
+            setOpenDelete(false); // Close delete confirmation modal
+            handleUpdateSuccess(); // Refresh product list
+        } catch (error) {
+            console.error('Failed to delete product:', error);
+        }
+    };
+
     return (
         <Box m="20px">
             <Header title="Product" subtitle="Managing the Products" />
@@ -124,7 +135,7 @@ const Product = () => {
             )}
             <CreateProduct open={openCreate} onClose={() => setOpenCreate(false)} onUpdateSuccess={handleUpdateSuccess} />
             <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} productData={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
-            {/* <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} productData={selectedProduct} onUpdateSuccess={handleUpdateSuccess} /> */}
+            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} productData={selectedProduct}  onDelete={handleDeleteProduct} /> {/* Pass delete function */}
         </Box>
     );
 };

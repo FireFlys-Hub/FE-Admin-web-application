@@ -42,6 +42,17 @@ const useProductService = ()=>{
             console.error("Fail to update product: ",error);
         }
     }
-    return {getAllProduct , CreateProduct ,getCategory, updateProduct}
+    const deleteProduct =async(id)=>{
+        try {
+            const res = await axios.delete(`admin/product/delete/${id}`);
+            if(res){
+                return true;
+            }
+            return false;
+        } catch (error) {
+            
+        }
+    }
+    return {getAllProduct , CreateProduct ,getCategory, updateProduct,deleteProduct}
 }
 export default useProductService;
