@@ -15,7 +15,7 @@ const CRUDCategories = () => {
   };
   const CreateCategory =async (formData) => {
     try {
-      const res = await axios.post(`/admin/category/create`)
+      const res = await axios.post(`/admin/category/create`,formData)
       console.log(res);
       return true; 
     } catch (error) {
