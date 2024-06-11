@@ -31,6 +31,50 @@ const useProductService = ()=>{
             console.error("Fail to get Category");
         }
     }
-    return {getAllProduct , CreateProduct ,getCategory}
+    const updateProduct = async (id,formData)=>{
+        try {
+            const res = await axios.post(`admin/product/update/${id}`,formData);
+            if(res){
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Fail to update product: ",error);
+        }
+    }
+    const deleteProduct =async(id)=>{
+        try {
+            const res = await axios.delete(`admin/product/delete/${id}`);
+            if(res){
+                return true;
+            }
+            return false;
+        } catch (error) {
+            
+        }
+    }
+    const getProductDeleted = async ()=>{
+        try {
+            const res =  await axios.get('admin/product/restore');
+            if(res){
+                return res;
+            }
+            return false;
+        } catch (error) {
+            
+        }
+    }
+    const restoreProduct = async(id)=>{
+        try {
+            const res = await axios.post(`admin/product/restore/${id}`);
+            if(res){
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error("Fail to restore product: ",error);
+        }
+    }
+    return {getAllProduct , CreateProduct ,getCategory, updateProduct,deleteProduct,getProductDeleted, restoreProduct}
 }
 export default useProductService;

@@ -7,7 +7,10 @@ import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import { DataGrid } from "@mui/x-data-grid";
 import useProductService from "../../data/product";
 import { Button } from "antd";
-import CreateProduct from "./Create"; // Adjust the import path as necessary
+import CreateProduct from "./Create";
+import UpdateProduct from "./Update";
+import DeleteProduct from "./Delete";
+import RestoreProduct from "./Restore";
 
 const Product = () => {
     const theme = useTheme();
@@ -16,10 +19,11 @@ const Product = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+    const [openRestore, setOpenRestore] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const { getAllProduct } = useProductService();
+    const { getAllProduct, deleteProduct } = useProductService();
 
-    const [size, setSize] = useState('large'); 
+    const [size, setSize] = useState('large');
 
     useEffect(() => {
         fetchData();
@@ -38,8 +42,7 @@ const Product = () => {
         { field: "name", headerName: "Name", flex: 1 },
         { field: "describe_product", headerName: "Describe Product", flex: 1 },
         {
-            field: "discount", headerName: "Discount", flex: 1, valueFormatter: (params) => {
-                const value = params.value;
+            field: "discount", headerName: "Discount", flex: 1, valueFormatter: (value) => {
                 if (value == null) {
                     return '';
                 }
@@ -51,8 +54,7 @@ const Product = () => {
             field: "sell_price",
             headerName: "Sell price",
             flex: 1,
-            valueFormatter: (params) => {
-                const value = params.value;
+            valueFormatter: (value) => {
                 if (value == null) {
                     return '';
                 }
@@ -85,13 +87,24 @@ const Product = () => {
     };
 
     const handleUpdateSuccess = () => {
-        fetchData(); // Fetch data again after successful update
+        fetchData();
+    };
+
+    const handleDeleteProduct = async () => {
+        try {
+            await deleteProduct(selectedProduct.id);
+            setOpenDelete(false);
+            handleUpdateSuccess();
+        } catch (error) {
+            console.error('Failed to delete product:', error);
+        }
     };
 
     return (
         <Box m="20px">
             <Header title="Product" subtitle="Managing the Products" />
             <Button size={size} type="default" onClick={() => setOpenCreate(true)}>Create</Button>
+            <Button size={size} type="default" onClick={() => setOpenRestore(true)}>RestoreProduct</Button>
             {product.length > 0 && (
                 <Box
                     m="40px 0 0 0"
@@ -124,8 +137,9 @@ const Product = () => {
                 </Box>
             )}
             <CreateProduct open={openCreate} onClose={() => setOpenCreate(false)} onUpdateSuccess={handleUpdateSuccess} />
-            {/* <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} Product={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
-            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} Product={selectedProduct} onUpdateSuccess={handleUpdateSuccess} /> */}
+            <UpdateProduct open={openUpdate} onClose={() => setOpenUpdate(false)} productData={selectedProduct} onUpdateSuccess={handleUpdateSuccess} />
+            <DeleteProduct open={openDelete} onClose={() => setOpenDelete(false)} productData={selectedProduct} onDelete={handleDeleteProduct} />
+            <RestoreProduct open={openRestore} onClose={() => setOpenRestore(false)} onUpdateSuccess={handleUpdateSuccess} />
         </Box>
     );
 };
