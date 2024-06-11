@@ -51,7 +51,6 @@ const DetailOrderModal = (props) => {
           },
         }}
         pageSizeOptions={[5, 10]}
-        checkboxSelection
       />
     </Modal>
   );

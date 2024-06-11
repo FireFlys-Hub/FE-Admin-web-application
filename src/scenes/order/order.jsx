@@ -2,25 +2,25 @@ import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import { ManageOrders } from "../../data/order";
 import Box from "@mui/material/Box";
-import { IconButton, useTheme } from "@mui/material";
+import { IconButton, useTheme, Select, MenuItem, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import DetailOrderModal from "./orderDetail";
 import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import { message } from "antd";
 
 const Order = () => {
-  const { getAllOrders, getAllOrdersById } = ManageOrders();
+  const { getAllOrders, getAllOrdersById, updateOrderStatus } = ManageOrders();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [orders, setOrders] = useState([]);
   const [isOpenDetailModal, setOpenDetailModal] = useState(false);
-  const [orderItemId, setOrderItemId] = useState(null);
   const [listOrderDetailItem, setListOrderDetailItem] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   const fetchData = async () => {
     const response = await getAllOrders();
     if (response) {
@@ -34,16 +34,31 @@ const Order = () => {
   };
 
   const showModalDetail = async (row) => {
-    setOrderItemId(row.id); // lấy ra id của từng cái order trong bảng
-    await getOrderDetail(row.id);
+    getOrderDetail(row.id);
     setOpenDetailModal(true);
   };
 
   const closeModalDetail = () => {
     setOpenDetailModal(false);
-    setOrderItemId(null);
     setListOrderDetailItem([]);
   };
+
+  const handleStatusChange = (orderId, newStatus) => {
+    try {
+      const updatedOrders = orders.map((order) => {
+        if (order.id === orderId) {
+          return { ...order, status: newStatus };
+        } else {
+          return order;
+        }
+      });
+      setOrders(updatedOrders);
+      updateOrderStatus(orderId, newStatus);
+    } catch (error) {
+      console.error("Error handling status change:", error);
+    }
+  };
+  
 
   const columns = [
     { field: "id", headerName: "ID", flex: 1 },
@@ -67,7 +82,76 @@ const Order = () => {
       flex: 1,
       editable: true,
     },
-    { field: "status", headerName: "Status", flex: 1, editable: true },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => (
+          params.value === "Canceled" ? 
+          (
+          <Button 
+              sx={{ 
+                width: '110px', 
+                color: 'white', 
+                backgroundColor:'red',
+                padding: '8px 10px' 
+              }}
+              onClick={()=>{message.error("Canceled orders cannot be edited")}}
+            >
+              {params.value}
+            </Button> 
+          )
+          : (
+         <Select
+          value={params.value}
+          onChange={(e) => handleStatusChange(params.row.id, e.target.value)}
+          autoWidth
+          sx={{
+            "& .MuiSelect-select": {
+              padding: "8px 16px",
+              color: "white",
+              backgroundColor:
+                params.value === "Canceled"
+                  ? "red"
+                  : params.value === "Delivering"
+                  ? "orange"
+                  : params.value === "Transacted"
+                  ? "blue"
+                  : "green",
+            },
+          }}
+        >
+          <MenuItem
+            value="Pending"
+            sx={{ backgroundColor: "green", color: "black" }}
+          >
+            Pending
+          </MenuItem>
+          <MenuItem
+            value="Delivering"
+            sx={{ backgroundColor: "orange", color: "black" }}
+          >
+            Delivering
+          </MenuItem>
+          <MenuItem
+            value="Canceled"
+            sx={{ backgroundColor: "red", color: "black" }}
+          >
+            Canceled
+          </MenuItem>
+          <MenuItem
+            value="Transacted"
+            sx={{ backgroundColor: "blue", color: "black" }}
+          >
+            Transacted
+          </MenuItem>
+        </Select>
+        
+      )
+    ),
+    
+    },
+
     { field: "order_date", headerName: "Order date", flex: 1, editable: true },
     { field: "destroy", headerName: "Destroy", flex: 1, editable: true },
     {
@@ -98,7 +182,6 @@ const Order = () => {
             },
           }}
           pageSizeOptions={[5, 10]}
-          checkboxSelection
           getRowId={(row) => row.id}
         />
       )}
