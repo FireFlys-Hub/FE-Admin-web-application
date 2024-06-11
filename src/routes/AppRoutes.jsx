@@ -6,6 +6,7 @@ import User from "../scenes/user/Users";
 import Categories from "../scenes/category/categories";
 import Layout from "../scenes/layout/Layout"; // Ensure you import the correct Layout component
 import Product from "../scenes/product/Products";
+import Contacts from "../scenes/contact/contact";
 
 const AppRouter = () => {
   return (
@@ -20,6 +21,7 @@ const AppRouter = () => {
             <Route path="/user" element={<User />} />
             <Route path="/category" element={<Categories />} />
             <Route path="/product" element={<Product />} />
+            <Route path="/contacts" element={<Contacts/>} />
           </Route>
         </Route>
       </Routes>
