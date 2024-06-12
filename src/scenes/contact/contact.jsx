@@ -70,6 +70,21 @@ const Contacts = () => {
       headerName: "Status",
       flex: 1,
       editable: true,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            backgroundColor:
+              params.value === "Pending"
+                ? theme.palette.error.main
+                : theme.palette.success.main,
+            color: "white",
+            padding: "4px 8px",
+            borderRadius: "4px",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
     },
     {
       headerName: "Action",
