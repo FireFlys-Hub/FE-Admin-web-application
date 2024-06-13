@@ -30,7 +30,7 @@ const CreateCategoryModal = (props) => {
 
   return (
     <Modal
-      title="Update Category"
+      title="Create new category"
       visible={open}
       onOk={handleOk}
       onCancel={onClose}
