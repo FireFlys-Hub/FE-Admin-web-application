@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Button, Modal, Input, Form, Upload, message } from 'antd';
+import React, { useState } from "react";
+import { Modal, Input, Form, message } from 'antd';
 import {CRUDCategories} from "../../data/category";
 const CreateCategoryModal = (props) => {
-  const { open, onClose, category, onUpdateSuccess } = props;
+  const { open, onClose, onUpdateSuccess } = props;
   const {CreateCategory} = CRUDCategories();
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -10,6 +10,7 @@ const CreateCategoryModal = (props) => {
   const handleOk = async ()  => {
     try {
         const values = await form.validateFields();
+        console.log(confirmLoading);
         setConfirmLoading(true);
         const formData = new FormData();
         formData.append('kind', values.kind);

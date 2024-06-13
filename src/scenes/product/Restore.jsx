@@ -11,6 +11,7 @@ const RestoreProduct = ({ open, onClose, onUpdateSuccess }) => {
         if (open) {
             fetchDeletedProducts();
         }
+    // eslint-disable-next-line
     }, [open]);
 
     const fetchDeletedProducts = async () => {

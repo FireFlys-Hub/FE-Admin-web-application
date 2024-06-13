@@ -1,10 +1,6 @@
-import { useContext } from "react";
-import { UserContext } from '../context/auth/UserContext';
 import axios from "../custom/axios";
 
 const useUserService = () => {
-  const { user } = useContext(UserContext);
-
   const AllUsers = async () => {
     try {
       const res = await axios.get('/admin/user');
@@ -17,8 +13,8 @@ const useUserService = () => {
 
   const UpdateUser = async (formData) => {
     try {
+      // eslint-disable-next-line
       const res = await axios.post(`/admin/user/update/${formData.id}`, formData);
-      console.log(res);
       return true; 
     } catch (error) {
       console.error('Error updating user:', error);
@@ -28,6 +24,7 @@ const useUserService = () => {
 
   const DeleteUser = async (id) => {
     try {
+      // eslint-disable-next-line
       const res = await axios.delete(`/admin/user/delete/${id}`);
       return true;
     } catch (error) {
