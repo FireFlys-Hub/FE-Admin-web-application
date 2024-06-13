@@ -21,8 +21,20 @@ const DetailOrderModal = (props) => {
       editable: true,
     },
     {
-      field: "product_id",
-      headerName: "Product ID",
+      field: "name",
+      headerName: "Product's name",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "discount",
+      headerName: "Discount",
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "sell_price",
+      headerName: "Sell price",
       flex: 1,
       editable: true,
     },
