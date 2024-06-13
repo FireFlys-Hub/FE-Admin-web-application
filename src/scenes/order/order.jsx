@@ -153,9 +153,9 @@ const Order = () => {
     },
 
     { field: "order_date", headerName: "Order date", flex: 1, editable: true },
-    { field: "destroy", headerName: "Destroy", flex: 1, editable: true },
+    // { field: "destroy", headerName: "Destroy", flex: 1, editable: true },
     {
-      headerName: "Action",
+      headerName: "Order Detail",
       renderCell: ({ row }) => (
         <Box display="flex" justifyContent="center">
           <IconButton

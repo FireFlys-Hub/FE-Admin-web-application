@@ -11,7 +11,7 @@ const Layout = () => {
               <SideBar />
               <Box width="100%">
                   <Topbar />
-                  <main>
+                  <main style={{width:'90%'}}>
                       <Outlet /> {/* Use Outlet to render child routes */}
                   </main>
               </Box>

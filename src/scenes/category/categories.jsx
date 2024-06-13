@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import { CRUDCategories } from "../../data/category";
 import Box from "@mui/material/Box";
-import { Button, IconButton, useTheme } from "@mui/material";
+import {  IconButton, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
@@ -107,7 +107,7 @@ const Categories = () => {
 
   return (
     <Box m="20px">
-      <Header title="Categories" subtitle="Managing the Categories" />;
+      <Header title="Categories" subtitle="Managing the Categories" />
       <IconButton
             color={colors.redAccent[500]}
             onClick={() =>{showModalCreateCategory()}}
@@ -124,7 +124,6 @@ const Categories = () => {
             },
           }}
           pageSizeOptions={[5, 10]}
-          checkboxSelection
         />
       )}
       <CreateCategoryModal
@@ -133,7 +132,6 @@ const Categories = () => {
         category={category}
         onUpdateSuccess={handleUpdateSuccess}
       />
-      {console.log("Current category:", category)};
       <UpdateCategoryModal
         open={isEditModalOpen}
         onClose={handleModalCloseModalEdit}
