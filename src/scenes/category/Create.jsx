@@ -16,6 +16,7 @@ const CreateCategoryModal = (props) => {
         formData.append('kind', values.kind);
         await CreateCategory(formData);
         message.success('Category create successfully');
+        form.resetFields(); // Reset fields after successful submission
         onClose();
         onUpdateSuccess(); 
       } catch (error) {
