@@ -33,7 +33,7 @@ const useAuthService = () => {
                 const accessToken = res.authorization.access_token;
                 const email = res.user.email;
                 setUserData(res.user);
-                setAuthToken(accessToken, res.authorization.refresh_token, 600000); // 10 minutes
+                setAuthToken(accessToken, res.authorization.refresh_token, 6000000); // 10 minutes
                 login({
                     isAuthenticated: true,
                     token: accessToken,

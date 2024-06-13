@@ -1,5 +1,4 @@
-import { Box, Typography, colors, useTheme } from "@mui/material";
-import { tokens } from "../theme";
+import { Box, Typography, colors } from "@mui/material";
 
 
 const Ratebox = (props) => {
@@ -15,14 +14,9 @@ const Ratebox = (props) => {
             color={colors.brown[500]}
             sx={{ m: "15px 0 5px 20px" }}
             >
-                {props.number}
+                {props.number} 
             </Typography>
-            <Typography variant="h2"
-            color={colors.grey[500]}
-            sx={{ m: "15px 0 5px 20px" }}
-            >
-                Increase by {props.percent}%
-            </Typography>
+
         </Box>
     )
 }
