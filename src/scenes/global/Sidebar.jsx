@@ -40,6 +40,7 @@ const SideBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  // eslint-disable-next-line
   const [selected, setSelected] = useState("Dashboard");
 
   useEffect(() => {

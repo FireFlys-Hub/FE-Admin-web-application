@@ -16,6 +16,7 @@ const UpdateProduct = ({ open, onClose, productData, onUpdateSuccess }) => {
             setCategories(categoryData);
         };
         fetchData();
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
@@ -38,6 +39,7 @@ const UpdateProduct = ({ open, onClose, productData, onUpdateSuccess }) => {
 
             form.setFieldsValue(initialValues);
         }
+        // eslint-disable-next-line
     }, [productData]);
 
     const handleOk = async () => {
@@ -59,7 +61,6 @@ const UpdateProduct = ({ open, onClose, productData, onUpdateSuccess }) => {
                 const imageField = `image_${i}`;
                 const imageFiles = values[imageField];
                 if (imageFiles && imageFiles.length > 0) {
-                    // console.log("này là link",imageFiles[0].url);
                     if(imageFiles[0].originFileObj){
                         formData.append(imageField, imageFiles[0].originFileObj);
                     }

@@ -1,10 +1,6 @@
-import { useContext } from 'react';
 import axios from '../custom/axios';
-import { UserContext } from '../context/auth/UserContext';
 
 const useProductService = ()=>{
-    const { user } = useContext(UserContext);
-    const token = user.token;
     const getAllProduct = async ()=>{
         try {
             const res = axios.get('/admin/product');
@@ -16,8 +12,8 @@ const useProductService = ()=>{
     }
     const CreateProduct = async (formData)=>{
         try {
+            // eslint-disable-next-line
             const res  = await axios.post('/admin/product/create',formData);
-           console.log(res);
             return true;
         } catch (error) {
             console.error("Fail to create data: ",error)

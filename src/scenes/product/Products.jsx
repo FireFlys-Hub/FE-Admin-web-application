@@ -22,18 +22,18 @@ const Product = () => {
     const [openRestore, setOpenRestore] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const { getAllProduct, deleteProduct } = useProductService();
-
+// eslint-disable-next-line
     const [size, setSize] = useState('large');
 
     useEffect(() => {
         fetchData();
+        // eslint-disable-next-line
     }, []);
 
     const fetchData = async () => {
         const productData = await getAllProduct();
         if (productData) {
             setProduct(productData);
-            console.log("Fetched product data:", productData);
         }
     };
 

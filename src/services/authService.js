@@ -91,7 +91,6 @@ const useAuthService = () => {
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Strict'
             });
-            console.log("đã gọi refresh");
             return accessToken; // Trả về token mới
         } catch (error) {
             console.error('Error refreshing token:', error);

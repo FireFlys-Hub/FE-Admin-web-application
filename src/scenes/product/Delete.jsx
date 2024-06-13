@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, message } from 'antd';
-import useProductService from '../../data/product';
 
 const DeleteProduct = ({ open, onClose, productData, onDelete }) => { // Add productData prop
   const { name } = productData || {}; // Destructure name from productData
-  const { DeleteProduct } = useProductService();
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const handleOk = async () => {

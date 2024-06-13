@@ -1,9 +1,5 @@
-import { useContext } from "react";
-import { UserContext } from "../context/auth/UserContext";
 import axios from "../custom/axios";
 const CRUDCategories = () => {
-  const { user } = useContext(UserContext);
-  const token = user.token;
   const GetCategories = async () => {
     try {
       const response = await axios.get("/admin/category");
