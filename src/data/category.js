@@ -33,6 +33,7 @@ const CRUDCategories = () => {
   const DeleteCategoryById = async (id) =>{
     try {
       const res = await axios.delete(`/admin/category/delete/${id}`);
+      console.log(res);
       return true;
     } catch (error) {
       console.error("Error delete category",error);
