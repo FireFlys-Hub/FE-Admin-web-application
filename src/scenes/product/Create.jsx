@@ -15,6 +15,7 @@ const CreateProduct = ({ open, onClose, onUpdateSuccess }) => {
       setCategories(categoryData); // Lưu danh sách category vào state
     };
     fetchData();
+    // eslint-disable-next-line
   }, []);
   const handleOk = async () => {
     try {

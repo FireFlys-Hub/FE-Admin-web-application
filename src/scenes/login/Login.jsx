@@ -29,6 +29,7 @@ const Login = () => {
         if(user.isAuthenticated === true){
             navigate('/');
         }
+        // eslint-disable-next-line
     },[])
     const handleLogin = async (e) => {
         e.preventDefault();
