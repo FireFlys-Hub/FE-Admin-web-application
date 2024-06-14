@@ -73,11 +73,13 @@ const CreateProduct = ({ open, onClose, onUpdateSuccess }) => {
     return Promise.resolve();
   };
   const validateInteger = (_, value) => {
-    if (!Number.isInteger(Number(value))) {
-      return Promise.reject('Please input an integer for quantity!');
+    const numberValue = Number(value);
+    if (!Number.isInteger(numberValue) || numberValue <= 0) {
+      return Promise.reject('Please input an integer greater than 0 for quantity!');
     }
     return Promise.resolve();
   };
+  
   return (
     <Modal
       title="Create Product"

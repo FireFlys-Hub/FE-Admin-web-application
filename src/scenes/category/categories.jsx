@@ -78,12 +78,6 @@ const Categories = () => {
       editable: true,
     },
     {
-      field: "updated_at",
-      headerName: "Updated_at",
-      flex:1,
-      editable: true,
-    },
-    {
       headerName: "Action",
       renderCell: ({ row }) => (
         <Box display="flex" justifyContent="center">
